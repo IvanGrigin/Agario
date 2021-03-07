@@ -2,6 +2,8 @@ import java.awt.*;
 
 public class Man {
 
+    boolean isLive;
+    boolean respaun;
     double x;
     double y;
     double mass;
@@ -15,6 +17,8 @@ public class Man {
 
 
     public Man(){
+        isLive = true;
+        respaun = true;
         x = 100;
         y = 100;
         mass = 20;
@@ -27,9 +31,20 @@ public class Man {
         direction = new Vector();
     }
     public void drawMan(Graphics g){
-        g.setColor(this.c);
-        length = mass;
-        g.fillOval((int) (x - length/2),(int) (y - length/2), (int) (length), (int) (length));
+        respaun = false;
+        if((x == 400)&&(y == 400)){
+            respaun = true;
+        }
+        if (isLive) {
+            g.setColor(this.c);
+            length = mass;
+            g.fillOval((int) (x - length / 2), (int) (y - length / 2), (int) (length), (int) (length));
+        }else{
+            isLive = true;
+            mass = 10;
+            x = 400;
+            y = 400;
+        }
     }
 
     public void update(long dt){
@@ -48,49 +63,13 @@ public class Man {
         }
     }
 
-
-
-
-
-/*
-    public void startRunningLeft() {
-        runningX = -1;
-    }
-    public void startRunningRight() {
-        runningX = 1;
-    }
-
-    public void stopRunningLeft() {
-        if (runningX == -1) {
-            runningX = 0;
+    public boolean checkPlayer(Player p){
+        double l = Math.sqrt((this.x - p.x)*(this.x - p.x) + (this.y - p.y)*(this.y - p.y));
+        length = mass;
+        if(l < (length/2)){
+            return true;
+        }else{
+            return false;
         }
     }
-    public void stopRunningRight() {
-        if (runningX == 1) {
-            runningX = 0;
-        }
-    }
-    public void startRunningUp() {
-        runningY = -1;
-    }
-    public void startRunningDown() {
-        runningY = 1;
-    }
-
-    public void stopRunningUp() {
-        if (runningY == -1) {
-            runningY = 0;
-        }
-    }
-    public void stopRunningDown() {
-        if (runningY == 1) {
-            runningY = 0;
-        }
-    }
-
-    public void update(long dt) {
-        x += dt * speed * runningX;
-        y += dt * speed * runningY;
-    }
- */
 }

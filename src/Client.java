@@ -11,12 +11,13 @@ public class Client extends MessageListener {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Client client = new Client();
-
+        client.start();
         new Thread(() -> {
             while(true){
                 client.frame.updateWorldPhysics();
                 client.frame.repaint();
                 client.frame.checkEatFood();
+                client.frame.checkEatPlayer();
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
@@ -24,7 +25,6 @@ public class Client extends MessageListener {
                 }
             }
         }).start();
-        client.start();
 
     }
 
@@ -65,7 +65,30 @@ public class Client extends MessageListener {
             frame.players.get(kolOfPlayer).x = Double.parseDouble(tokenX);
             frame.players.get(kolOfPlayer).y = Double.parseDouble(tokenY);
             frame.players.get(kolOfPlayer).mass = Double.parseDouble(tokenM);
+        }
+        if(token.equals("RemoveFood")){
+            String tokenNumber = tokenizer.nextToken();
+            int kolOfFood = Integer.parseInt(tokenNumber);
 
+            String tokenX = tokenizer.nextToken();
+            String tokenY = tokenizer.nextToken();
+            String tokenM = tokenizer.nextToken();
+
+            while (kolOfFood >= frame.eat.size() - 1) {
+                frame.eat.add(new Food());
+            }
+            Food f = new Food();
+            f.x =  Double.parseDouble(tokenX);
+            f.y =  Double.parseDouble(tokenY);
+            f.mass =  Double.parseDouble(tokenM);
+            frame.eat.set(kolOfFood, f);
+        }
+        if(token.equals("Eating")){
+            String tokenNumber = tokenizer.nextToken();
+            int kolOfPlayer = Integer.parseInt(tokenNumber);
+            if(kolOfPlayer == numberOfClient){
+                frame.man.isLive = false;
+            }
         }
     }
 

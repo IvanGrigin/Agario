@@ -37,7 +37,6 @@ public class Frame extends JFrame implements KeyEventDispatcher, MouseMotionList
         this.previousWorldUpdateTime = System.currentTimeMillis();
         eat = new ArrayList<>();
         players = new ArrayList<>();
-        firstFood();
 
         repaint();
     }
@@ -62,7 +61,6 @@ public class Frame extends JFrame implements KeyEventDispatcher, MouseMotionList
                 eat.get(i).drawFood(g);
             }
         }
-
         if(players != null){
             for (int i = 0; i < players.size(); i = i + 1){
                 players.get(i).drawPlayer(g);
@@ -89,19 +87,12 @@ public class Frame extends JFrame implements KeyEventDispatcher, MouseMotionList
     }
     public void sentNewFood(int i, Food testFood){
         this.postman.sendMessage("RemoveFood " + i + " " + testFood.x + " " + testFood.y + " " +testFood.mass + " " + testFood.c.toString() + " ");
-
+    }
+    public void sentEatPlayer(int i){
+        this.postman.sendMessage("Eating " + i);
     }
 
-    public void sentFirstState() {
-        this.postman.sendMessage("newPlayer " + numberOfPlayer + " " + man.x + " " + man.y + " " + man.mass + " "+ man.c.toString());
 
-        String text = "";
-        for (int i = 0; i < eat.size(); i = i + 1){
-            Food testFood = eat.get(i);
-            text = text + " "+ testFood.x + " " + testFood.y + " " +testFood.mass + " " + testFood.c.toString() + " ";
-        }
-        this.postman.sendMessage("Food "+ eat.size() + " " + text);
-    }
 
     public boolean dispatchKeyEvent(KeyEvent e) {
         /*
@@ -181,17 +172,26 @@ public class Frame extends JFrame implements KeyEventDispatcher, MouseMotionList
 
     }
 
-    public void firstFood(){
-        for(int i = 0; i < 80; i = i + 1){
-            eat.add(new Food(getWidth(), getHeight()));
-        }
-    }
     public void checkEatFood(){
         for (int i = 0; i < eat.size(); i = i + 1){
             if(man.checkEat(eat.get(i))){
                 man.mass = man.mass + eat.get(i).mass;
-                eat.remove(i);
-                eat.add(new Food(getWidth(),getHeight()));
+                Food t = new Food(getWidth(),getHeight());
+                eat.set(i, t);
+                sentNewFood(i, t);
+            }
+        }
+    }
+    public void checkEatPlayer(){
+        for (int i = 0; i < players.size(); i = i + 1){
+            if((man.checkPlayer(players.get(i))&&(numberOfPlayer != i)&&(!players.get(i).respaun))){
+                if (man.mass >= players.get(i).mass){
+                    man.mass = man.mass + players.get(i).mass;
+                    sentEatPlayer(i);
+                }else{
+                    man.isLive = false;
+                }
+                sentState();
             }
         }
     }
