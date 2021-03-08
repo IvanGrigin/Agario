@@ -11,8 +11,8 @@ public class Server extends MessageListener {
     ArrayList<Player> players = new ArrayList<>();
 
     public Server() {
-        for(int i = 0; i < 80; i = i + 1){
-            foodOfServer.add(new Food(500, 500));
+        for(int i = 0; i < 200; i = i + 1){
+            foodOfServer.add(new Food(800, 800));
         }
     }
 

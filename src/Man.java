@@ -19,8 +19,8 @@ public class Man {
     public Man(){
         isLive = true;
         respaun = true;
-        x = 100;
-        y = 100;
+        x = 400;
+        y = 400;
         mass = 20;
         length = mass;
         speed = 0.15;
@@ -39,6 +39,9 @@ public class Man {
             g.setColor(this.c);
             length = mass;
             g.fillOval((int) (x - length / 2), (int) (y - length / 2), (int) (length), (int) (length));
+            g.setColor(Color.WHITE);
+            int m = (int)(this.mass);
+            g.drawString(Integer.toString(m),(int)(x-3),(int)(y+3));
         }else{
             isLive = true;
             mass = 10;

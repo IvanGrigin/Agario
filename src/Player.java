@@ -30,6 +30,10 @@ public class Player {
         length = mass;
         g.setColor(c);
         g.fillOval((int)(x - length/2),(int)(y - length/2),(int)(length),(int)(length));
+        g.setColor(Color.WHITE);
+        int m = (int)(this.mass);
+        g.drawString(Integer.toString(m),(int)(x-3),(int)(y+3));
+
     }
 
 
